@@ -1,53 +1,27 @@
-<!DOCTYPE html>
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *      
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License
+-->
+        <ModulePrefs title="Hangout Starter">
+                <Require feature="rpc" />
+                <Require feature="views" />
+                <Require feature="locked-domain" />
+        </ModulePrefs>
+        <Content type="html"><![CDATA[     
+
 <html>
-
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Hangout : ">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Hangout</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/rodrodev/hangout">View on GitHub</a>
-
-          <h1 id="project_title">Hangout</h1>
-          <h2 id="project_tagline"></h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/rodrodev/hangout/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/rodrodev/hangout/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
-</p>
-
-
-
-<pre><code>    &lt;ModulePrefs title="Hangout Starter"&gt;
-            &lt;Require feature="rpc" /&gt;
-            &lt;Require feature="views" /&gt;
-            &lt;Require feature="locked-domain" /&gt;
-    &lt;/ModulePrefs&gt;
-    &lt;Content type="html"&gt;&lt;![CDATA[     
-</code></pre>
-
-<p></p>
-
-
-&lt;!--
+<style type="text/css">
+<!--
 .button {
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -60,44 +34,63 @@
         background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
         background: -moz-linear-gradient(bottom, #ddd, #aaa); }
 
---&gt;
+-->
+</style>
+<body>
 
+<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
 
-<p></p>
-
-
-
-<h3>
-<a id="simple-hangout-app" class="anchor" href="#simple-hangout-app" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Hangout App</h3>
+<h3>Simple Hangout App</h3>
 
 <p>
-
+<input class="button" type="button" value="Show participants!" id="showParticipants" 
+    style="visibility:hidden;"
+    onClick="showParticipants()"/>
 </p>
 
 <div id="participantsDiv"></div>
 
 <hr>
 
-<p><a href="http://developers.google.com/+/hangouts/getting-started">Read the docs</a> to learn more about developing hangouts!</p>
+<p><a href="http://developers.google.com/+/hangouts/getting-started">Read the docs</a> to learn more about developing hangouts!</a></p>
 
+<script>
+function showParticipants() {
+  var participants = gapi.hangout.getParticipants();
 
+  var retVal = '<p>Participants: </p><ul>';
 
-<p>
-]]&gt;
+  for (var index in participants) {
+    var participant = participants[index];
 
-</p>
-      </section>
-    </div>
+    if (!participant.person) {
+      retVal += '<li>A participant not running this app</li>';
+    }
+    retVal += '<li>' + participant.person.displayName + '</li>';
+  }
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Hangout maintained by <a href="https://github.com/rodrodev">rodrodev</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+  retVal += '</ul>';
 
-    
+  var div = document.getElementById('participantsDiv');
 
-  </body>
-</html>
+  div.innerHTML = retVal;
+}
+
+function init() {
+  // When API is ready...                                                         
+  gapi.hangout.onApiReady.add(
+      function(eventObj) {
+        if (eventObj.isApiReady) {
+          document.getElementById('showParticipants')
+            .style.visibility = 'visible';
+        }
+      });
+}
+
+// Wait for gadget to load.                                                       
+gadgets.util.registerOnLoadHandler(init);
+</script>
+</body>
+]]>
+</Content>
+</Module>
